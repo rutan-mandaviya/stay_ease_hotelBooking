@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+/* Tailwind v4 mein custom colors/themes yahi bante hain */
+@theme {
+  --color-primary: #3b82f6; /* StayEase Blue */
+  --color-secondary: #1e293b; /* Deep Slate */
+  --color-accent: #f59e0b; /* Warm Amber */
+
+  --font-sans: "Inter", ui-sans-serif, system-ui;
+}
+
+/* Custom base styles if needed */
+@layer base {
+  body {
+    @apply bg-gray-50 text-secondary;
+  }
+}
