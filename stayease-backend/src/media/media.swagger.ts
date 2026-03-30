@@ -25,6 +25,18 @@ export function ApiGetRoomImage() {
   );
 }
 
+export function ApiGetHotelImage() {
+  return applyDecorators(
+    ApiOperation({ summary: 'Serve hotel images from the server disk' }),
+    ApiParam({
+      name: 'filename',
+      description: 'Name of the hotel image file (e.g., hotel-123.jpg)',
+    }),
+    ApiResponse({ status: 200, description: 'Returns the image file.' }),
+    ApiResponse({ status: 404, description: 'Image not found.' }),
+  );
+}
+
 export function ApiUploadRoomImages() {
   return applyDecorators(
     ApiBearerAuth('JWT-auth'),

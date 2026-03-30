@@ -25,6 +25,7 @@ import {
   ApiHotels,
   ApiCreateHotel,
   ApiFindAllHotels,
+  ApiOwnerHotels,
   ApiFindOneHotel,
   ApiUpdateHotel,
   ApiRemoveHotel,
@@ -42,7 +43,7 @@ export class HotelsController {
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.HOTEL_OWNER)
-  @UseInterceptors(FileInterceptor('image', multerOptions('hotels'))) 
+  @UseInterceptors(FileInterceptor('image', multerOptions('hotels')))
   create(
     @Body() dto: CreateHotelDto,
     @Req() req: { user: JwtPayloadDto },
@@ -56,7 +57,8 @@ export class HotelsController {
   findAll(@Query() query: HotelQueryDto) {
     return this.hotelsService.findAll(query);
   }
-  
+
+  @ApiOwnerHotels()
   @Get('owner/my-properties')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.HOTEL_OWNER)

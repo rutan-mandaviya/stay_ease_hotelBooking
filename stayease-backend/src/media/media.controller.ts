@@ -25,6 +25,7 @@ import {
   ApiMedia,
   ApiGetRoomImage,
   ApiUploadRoomImages,
+  ApiGetHotelImage,
 } from './media.swagger';
 
 @ApiMedia('Media & Uploads')
@@ -50,7 +51,7 @@ export class MediaController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.HOTEL_OWNER)
   @Post('rooms/:id/images')
-  @UseInterceptors(FilesInterceptor('images', 5, multerOptions('rooms'))) 
+  @UseInterceptors(FilesInterceptor('images', 5, multerOptions('rooms')))
   uploadImages(
     @Param('id') id: string,
     @UploadedFiles() files: Array<Express.Multer.File>,
@@ -59,6 +60,7 @@ export class MediaController {
     return this.roomsService.uploadImages(id, files, req.user.id);
   }
 
+  @ApiGetHotelImage()
   @Get('hotels/:filename')
   getHotelImage(@Param('filename') filename: string, @Res() res: Response) {
     const filePath = join(process.cwd(), 'uploads/hotels', filename);

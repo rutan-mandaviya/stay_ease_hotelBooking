@@ -30,6 +30,18 @@ export function ApiFindAllHotels() {
   );
 }
 
+export function ApiOwnerHotels() {
+  return applyDecorators(
+    ApiBearerAuth('JWT-auth'),
+    ApiOperation({ summary: 'Get hotels owned by the authenticated owner' }),
+    ApiResponse({ status: 200, description: 'Returns owner hotel listings' }),
+    ApiResponse({
+      status: 403,
+      description: 'Forbidden. Owner role required.',
+    }),
+  );
+}
+
 export function ApiFindOneHotel() {
   return applyDecorators(
     ApiOperation({ summary: 'Get hotel details by ID' }),

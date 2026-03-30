@@ -5,6 +5,7 @@ import {
   ApiBearerAuth,
   ApiTags,
   ApiParam,
+  ApiProduces,
 } from '@nestjs/swagger';
 
 export function ApiBookings(tag: string) {
@@ -67,5 +68,15 @@ export function ApiConfirmBooking() {
       status: 403,
       description: 'Forbidden. Requires Admin or Owner role.',
     }),
+  );
+}
+
+export function ApiDownloadInvoice() {
+  return applyDecorators(
+    ApiOperation({ summary: 'Download booking invoice as PDF' }),
+    ApiParam({ name: 'id', description: 'Booking UUID' }),
+    ApiProduces('application/pdf'),
+    ApiResponse({ status: 200, description: 'Invoice PDF downloaded.' }),
+    ApiResponse({ status: 404, description: 'Booking not found.' }),
   );
 }

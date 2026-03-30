@@ -25,6 +25,7 @@ import {
   ApiFindOneBooking,
   ApiCancelBooking,
   ApiConfirmBooking,
+  ApiDownloadInvoice,
 } from './bookings.swagger';
 
 @ApiBookings('Bookings Management')
@@ -69,11 +70,9 @@ export class BookingsController {
     return this.bookingsService.confirm(id);
   }
 
-  
-
+  @ApiDownloadInvoice()
   @Get(':id/invoice')
   async downloadInvoice(@Param('id') id: string, @Res() res: any) {
-    
     const buffer = await this.bookingsService.getInvoiceBuffer(id);
 
     res.set({

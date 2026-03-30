@@ -4,14 +4,13 @@ import { asyncFetchHotels } from "../../store/actions/hotelActions";
 import { updateFilters } from "../../store/reducers/hotelSlice";
 import Navbar from "../../components/layout/Navbar";
 import FilterBar from "../../components/home/FilterBar";
-import HotelCard from "../../components/hotel/HotelCard"; 
+import HotelCard from "../../components/hotel/HotelCard";
 import { Sparkles } from "lucide-react";
 
 const Home = () => {
   const dispatch = useDispatch();
   const { hotels, loading, filters } = useSelector((state) => state.hotel);
 
-  
   useEffect(() => {
     dispatch(asyncFetchHotels(filters));
   }, [dispatch]);
@@ -28,7 +27,7 @@ const Home = () => {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
 
-      {}
+      {/* Hero Section */}
       <div className="bg-secondary pt-24 pb-32 px-4 text-center">
         <div className="max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-white/10 text-primary px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-6">
@@ -39,19 +38,19 @@ const Home = () => {
             <span className="text-primary italic">StayEase</span> home
           </h1>
           <p className="text-gray-400 font-medium text-lg">
-            Ab har trip hogi yaadgaar, sahi hotel ke saath.
+            Make every trip memorable with the right hotel.
           </p>
         </div>
       </div>
 
-      {}
+      {/* Filter Section */}
       <FilterBar
         filters={filters}
         onFilterChange={handleFilterUpdate}
         onSearch={handleSearch}
       />
 
-      {}
+      {/* Hotel Listing Section */}
       <div className="max-w-7xl mx-auto px-4 pb-20">
         <div className="flex justify-between items-end mb-10">
           <div>
@@ -82,9 +81,11 @@ const Home = () => {
         {!loading && hotels?.length === 0 && (
           <div className="text-center py-20 bg-white rounded-[3rem] border-2 border-dashed border-gray-100">
             <p className="text-gray-400 font-bold text-xl">
-              Arre bhai! Koi hotel nahi mila.
+              No hotels found matching your criteria.
             </p>
-            <p className="text-gray-400">Filters thode change karke dekhiye.</p>
+            <p className="text-gray-400">
+              Try adjusting your filters to find more results.
+            </p>
           </div>
         )}
       </div>

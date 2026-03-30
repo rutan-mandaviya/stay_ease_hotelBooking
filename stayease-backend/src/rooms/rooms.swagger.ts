@@ -59,3 +59,13 @@ export function ApiRemoveRoomImage() {
     ApiResponse({ status: 200, description: 'Image removed successfully.' }),
   );
 }
+
+export function ApiDeleteRoom() {
+  return applyDecorators(
+    ApiBearerAuth('JWT-auth'),
+    ApiOperation({ summary: 'Delete a specific room' }),
+    ApiParam({ name: 'id', description: 'Room UUID' }),
+    ApiResponse({ status: 200, description: 'Room deleted successfully.' }),
+    ApiResponse({ status: 404, description: 'Room not found.' }),
+  );
+}

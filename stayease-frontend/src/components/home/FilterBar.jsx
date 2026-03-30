@@ -5,7 +5,7 @@ const FilterBar = ({ filters, onFilterChange, onSearch }) => {
   return (
     <div className="w-full max-w-6xl mx-auto -mt-12 mb-12 px-4 relative z-10">
       <div className="bg-white p-6 rounded-[2.5rem] shadow-2xl shadow-primary/10 border border-gray-100 flex flex-col lg:flex-row gap-4 items-center">
-        {}
+        {/* City Filter */}
         <div className="flex-1 w-full relative">
           <MapPin
             className="absolute left-4 top-1/2 -translate-y-1/2 text-primary"
@@ -13,14 +13,14 @@ const FilterBar = ({ filters, onFilterChange, onSearch }) => {
           />
           <input
             type="text"
-            placeholder="Kahan jaana hai? (City)"
+            placeholder="Where to? (City)"
             className="w-full pl-12 pr-4 py-4 bg-gray-50 rounded-2xl border-none font-bold text-secondary focus:ring-2 focus:ring-primary/20"
             value={filters.city}
             onChange={(e) => onFilterChange({ city: e.target.value })}
           />
         </div>
 
-        {}
+        {/* Search Filter */}
         <div className="flex-1 w-full relative">
           <Search
             className="absolute left-4 top-1/2 -translate-y-1/2 text-primary"
@@ -28,14 +28,14 @@ const FilterBar = ({ filters, onFilterChange, onSearch }) => {
           />
           <input
             type="text"
-            placeholder="Hotel ka naam..."
+            placeholder="Search hotel name..."
             className="w-full pl-12 pr-4 py-4 bg-gray-50 rounded-2xl border-none font-bold text-secondary focus:ring-2 focus:ring-primary/20"
             value={filters.search}
             onChange={(e) => onFilterChange({ search: e.target.value })}
           />
         </div>
 
-        {}
+        {/* Price Range Filter */}
         <div className="flex-[0.8] w-full flex gap-2">
           <div className="relative flex-1">
             <IndianRupee
@@ -65,7 +65,7 @@ const FilterBar = ({ filters, onFilterChange, onSearch }) => {
           </div>
         </div>
 
-        {}
+        {/* Search Button */}
         <button
           onClick={onSearch}
           className="w-full lg:w-auto px-10 py-4 bg-secondary text-white rounded-2xl font-black hover:bg-primary transition-all shadow-lg shadow-primary/20"

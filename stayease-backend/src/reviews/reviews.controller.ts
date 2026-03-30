@@ -15,12 +15,19 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { UserRole } from 'src/users/user.model';
 import { JwtPayloadDto } from 'src/common/dto/jwt-payload.dto';
+import {
+  ApiReviews,
+  ApiCreateReview,
+  ApiFindReviewsByHotel,
+  ApiDeleteReview,
+} from './reviews.swagger';
 
+@ApiReviews('Reviews')
 @Controller('reviews')
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
-  
+  @ApiCreateReview()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.GUEST)
   @Post()
@@ -28,13 +35,13 @@ export class ReviewsController {
     return this.reviewsService.create(dto, req.user.id);
   }
 
-  
+  @ApiFindReviewsByHotel()
   @Get('hotel/:hotelId')
   findByHotel(@Param('hotelId') hotelId: string) {
     return this.reviewsService.findByHotel(hotelId);
   }
 
-  
+  @ApiDeleteReview()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.GUEST, UserRole.ADMIN)
   @Delete(':id')

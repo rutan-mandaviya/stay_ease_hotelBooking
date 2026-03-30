@@ -24,6 +24,7 @@ import {
   ApiFindOneRoom,
   ApiUpdateRoom,
   ApiRemoveRoomImage,
+  ApiDeleteRoom,
 } from './rooms.swagger';
 
 @ApiRooms('Hotel Rooms')
@@ -78,6 +79,7 @@ export class RoomsController {
     return this.roomsService.removeImage(imageId, req.user.id);
   }
 
+  @ApiDeleteRoom()
   @Delete('rooms/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.HOTEL_OWNER)
