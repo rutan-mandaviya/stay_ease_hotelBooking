@@ -37,7 +37,6 @@ export class PaymentsService {
     const booking = await this.bookingModel.findByPk(bookingId);
     if (!booking) throw new NotFoundException('Booking not found');
 
-    
     let payment = await this.paymentModel.findOne({
       where: { booking_id: bookingId, status: PaymentStatus.PENDING },
     });
@@ -45,13 +44,11 @@ export class PaymentsService {
     let clientSecret: string | null;
 
     if (payment) {
-      
       const intent = await this.stripe.paymentIntents.retrieve(
         payment.stripe_intent_id,
       );
       clientSecret = intent.client_secret;
     } else {
-      
       const intent = await this.stripe.paymentIntents.create({
         amount: Math.round(booking.total_price * 100),
         currency: 'inr',
@@ -70,12 +67,11 @@ export class PaymentsService {
 
     return buildResponse(HttpStatus.CREATED, 'Payment intent ready', {
       clientSecret,
-      paymentId: payment.id, 
+      paymentId: payment.id,
     });
   }
 
   async markAsPaid(bookingId: string) {
-    
     const transaction = await this.bookingModel.sequelize!.transaction();
 
     try {
@@ -88,14 +84,12 @@ export class PaymentsService {
       if (!payment) throw new NotFoundException('Payment not found');
       if (payment.status === PaymentStatus.PAID) return payment;
 
-      
       const intent = await this.stripe.paymentIntents.retrieve(
         payment.stripe_intent_id,
       );
       if (intent.status !== 'succeeded')
         throw new BadRequestException('Payment not verified');
 
-      
       await payment.update({ status: PaymentStatus.PAID }, { transaction });
       await payment.booking.update(
         { status: BookingStatus.CONFIRMED, is_paid: true },
@@ -104,7 +98,6 @@ export class PaymentsService {
 
       await transaction.commit();
 
-      
       await this.mailQueue.add('send-invoice', {
         bookingId: payment.booking_id,
         email: payment.booking.user.email,
@@ -121,7 +114,6 @@ export class PaymentsService {
     }
   }
 
-  
   async getByBooking(bookingId: string) {
     const payment = await this.paymentModel.findOne({
       where: { booking_id: bookingId },
@@ -131,14 +123,12 @@ export class PaymentsService {
     return buildResponse(HttpStatus.OK, 'Payment details fetched', payment);
   }
 
-  
   async refund(id: string) {
     const payment = await this.paymentModel.findByPk(id);
     if (!payment || payment.status !== PaymentStatus.PAID) {
       throw new BadRequestException('Only PAID payments can be refunded');
     }
 
-    
     await this.stripe.refunds.create({
       payment_intent: payment.stripe_intent_id,
     });
@@ -146,7 +136,6 @@ export class PaymentsService {
     payment.status = PaymentStatus.REFUNDED;
     await payment.save();
 
-    
     await this.bookingModel.update(
       { status: BookingStatus.CANCELLED },
       { where: { id: payment.booking_id } },

@@ -27,24 +27,21 @@ const MyBookings = () => {
 
   const bookingsList = Array.isArray(myBookings) ? myBookings : [];
 
-  
   const getBookingImage = (booking) => {
     const hotel = booking?.room?.hotel;
     const room = booking?.room;
 
-    
     if (hotel?.cover_image) {
       return `http://localhost:3000/uploads/hotels/${hotel.cover_image}`;
     }
-    
+
     if (room?.images?.[0]?.image_url) {
       return `http://localhost:3000${room.images[0].image_url}`;
     }
-    
+
     return "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=800";
   };
 
-  
   const formatDate = (dateStr) => {
     return new Date(dateStr).toLocaleDateString("en-IN", {
       day: "numeric",
@@ -92,7 +89,7 @@ const MyBookings = () => {
                 key={booking.id}
                 className="bg-white rounded-[3rem] border border-gray-100 shadow-sm flex flex-col lg:flex-row overflow-hidden hover:shadow-xl transition-all duration-500 group"
               >
-                {}
+                {/* Image Section */}
                 <div className="w-full lg:w-80 h-64 lg:h-auto relative overflow-hidden">
                   <img
                     src={getBookingImage(booking)}
@@ -104,7 +101,7 @@ const MyBookings = () => {
                   </div>
                 </div>
 
-                {}
+                {/* Info Section */}
                 <div className="flex-1 p-8 md:p-10 flex flex-col justify-between">
                   <div>
                     <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-8">
@@ -163,7 +160,7 @@ const MyBookings = () => {
                     </div>
                   </div>
 
-                  {}
+                  {/* Actions */}
                   <div className="mt-10 flex flex-wrap items-center justify-between gap-4">
                     <Link
                       to={`/hotel/${booking.room?.hotel?.id}`}
@@ -197,10 +194,10 @@ const MyBookings = () => {
                   <FileText className="text-gray-200" size={40} />
                 </div>
                 <h3 className="text-2xl font-black text-secondary mb-2 italic">
-                  Khaali Maidaan!
+                  No Bookings Found!
                 </h3>
                 <p className="text-gray-400 font-medium mb-10">
-                  Bhai, abhi tak koi booking nahi ki hai. Plan kab hai?
+                  You haven't planned any stays yet. Ready for your next trip?
                 </p>
                 <Link
                   to="/"

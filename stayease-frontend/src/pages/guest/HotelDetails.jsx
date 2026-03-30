@@ -63,7 +63,7 @@ const HotelDetails = () => {
       <Navbar />
 
       <main className="max-w-7xl mx-auto px-4 py-6 md:py-10">
-        {}
+        {/* Back Button */}
         <button
           onClick={() => navigate("/")}
           className="flex items-center gap-2 text-gray-400 hover:text-primary mb-8 font-black text-[10px] md:text-xs uppercase tracking-[0.2em] transition-all group"
@@ -75,11 +75,10 @@ const HotelDetails = () => {
         </button>
 
         <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8 lg:gap-12">
-          {}
+          {/* Left Content */}
           <div className="lg:col-span-8 space-y-10 md:space-y-14">
-            {}
+            {/* Gallery */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 h-auto">
-              {}
               <div className="md:col-span-3 aspect-[4/3] md:aspect-auto md:h-[500px] rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden shadow-xl border-4 border-white">
                 <img
                   src={getImageUrl(firstRoomImages[0])}
@@ -88,7 +87,6 @@ const HotelDetails = () => {
                 />
               </div>
 
-              {}
               <div className="hidden md:flex flex-col gap-4 md:col-span-1 h-[500px]">
                 <div className="flex-1 rounded-[2rem] overflow-hidden shadow-md border-4 border-white">
                   <img
@@ -112,7 +110,7 @@ const HotelDetails = () => {
               </div>
             </div>
 
-            {}
+            {/* Description */}
             <section className="bg-white p-8 md:p-12 rounded-[2.5rem] md:rounded-[3.5rem] border border-gray-100 shadow-sm relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16" />
               <h2 className="text-2xl md:text-3xl font-black text-secondary mb-6 flex items-center gap-3 italic tracking-tight">
@@ -123,11 +121,11 @@ const HotelDetails = () => {
               </h2>
               <p className="text-gray-500 font-medium leading-relaxed text-sm md:text-lg">
                 {selectedHotel.description ||
-                  "Bhai, ye hotel ekdum lajawab hai! Saari suvidhayein aur world-class service ke saath, aapka stay yaadgaar banne wala hai."}
+                  "Experience unparalleled luxury and world-class service. This property is designed to provide an unforgettable stay with premium amenities and comfort."}
               </p>
             </section>
 
-            {}
+            {/* Room List */}
             <section className="space-y-8">
               <div className="flex justify-between items-center px-2">
                 <h2 className="text-2xl md:text-4xl font-black text-secondary italic tracking-tighter">
@@ -147,7 +145,7 @@ const HotelDetails = () => {
                 ) : (
                   <div className="text-center py-20 bg-white rounded-[3rem] border-2 border-dashed border-gray-100">
                     <p className="text-gray-400 font-black italic">
-                      No rooms active right now, bhai!
+                      No active rooms available at this moment.
                     </p>
                   </div>
                 )}
@@ -155,10 +153,9 @@ const HotelDetails = () => {
             </section>
           </div>
 
-          {}
+          {/* Sidebar */}
           <div className="lg:col-span-4">
             <div className="bg-white p-8 md:p-10 rounded-[2.5rem] md:rounded-[3.5rem] border border-gray-100 shadow-2xl shadow-primary/5 lg:sticky lg:top-24 transition-all overflow-hidden">
-              {}
               <div className="flex justify-between items-start mb-10">
                 <div className="flex-1">
                   <h1 className="text-3xl md:text-4xl font-black text-secondary leading-[1.1] mb-3 uppercase tracking-tighter">
@@ -175,7 +172,6 @@ const HotelDetails = () => {
                 </div>
               </div>
 
-              {}
               <div className="space-y-8 py-8 border-y border-gray-50">
                 <h3 className="text-[10px] font-black text-gray-300 uppercase tracking-[0.3em]">
                   Core Amenities
@@ -188,22 +184,20 @@ const HotelDetails = () => {
                 </div>
               </div>
 
-              {}
               <div className="mt-10 p-6 bg-secondary rounded-[2rem] text-white relative group overflow-hidden">
                 <div className="absolute bottom-0 right-0 w-24 h-24 bg-white/5 rounded-full -mr-10 -mb-10 group-hover:scale-150 transition-transform duration-700" />
                 <p className="text-[10px] font-black text-primary uppercase mb-2 tracking-widest">
                   StayEase Verified
                 </p>
                 <p className="text-[11px] font-medium text-gray-300 leading-relaxed">
-                  Bhai, tension mat lo! StayEase har booking par best price aur
-                  top quality ki guarantee deta hai.
+                  Book with confidence. StayEase guarantees the best rates and
+                  premium quality standards for every reservation.
                 </p>
               </div>
 
-              {}
               <div className="mt-8 pt-6 lg:hidden border-t border-gray-100">
                 <p className="text-center text-[10px] font-black text-gray-400 uppercase tracking-widest italic">
-                  Scroll down to see rooms & book
+                  Scroll down to view rooms
                 </p>
               </div>
             </div>

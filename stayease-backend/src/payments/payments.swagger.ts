@@ -44,7 +44,7 @@ export function ApiGetPayment() {
 export function ApiMarkPaid() {
   return applyDecorators(
     ApiOperation({ summary: 'Mark payment as PAID (Simulate Stripe Success)' }),
-    ApiParam({ name: 'id', description: 'Payment UUID' }),
+    // ApiParam({ name: 'id', description: 'Payment UUID' }),
     ApiResponse({
       status: 200,
       description: 'Payment updated and Booking confirmed.',
