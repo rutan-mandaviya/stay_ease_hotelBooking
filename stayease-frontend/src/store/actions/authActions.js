@@ -7,22 +7,22 @@ import {
   removeUser,
 } from "../reducers/authSlice";
 
-// REGISTER ACTION
+
 export const asyncRegister = (formData) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     await API.post("/auth/register", formData);
 
-    // Sirf success message ya true return karo
+    
     dispatch(setLoading(false));
-    return true; // <--- Yeh important hai
+    return true; 
   } catch (error) {
     dispatch(setError(error.response?.data?.message || "Registration Failed"));
     return false;
   }
 };
 
-// LOGIN ACTION
+
 export const asyncLogin = (credentials) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
@@ -37,7 +37,7 @@ export const asyncLogin = (credentials) => async (dispatch) => {
       setUser({ user: actualData.user, token: actualData.access_token }),
     );
 
-    return true; // <--- Yeh success signal hai
+    return true; 
   } catch (error) {
     dispatch(setError(error.response?.data?.message || "Login Failed"));
     return false;
@@ -54,7 +54,7 @@ export const asyncLoadUser = () => async (dispatch) => {
     dispatch(setUser({ user: data, token }));
   } catch (error) {
     console.log("asyncLoadUser error", error);
-    // Interceptor logout handle kar lega, yahan sirf state clean karo
+    
     dispatch(removeUser());
   } finally {
     dispatch(setLoading(false));

@@ -27,24 +27,24 @@ const MyBookings = () => {
 
   const bookingsList = Array.isArray(myBookings) ? myBookings : [];
 
-  // ✨ Robust Image Helper
+  
   const getBookingImage = (booking) => {
     const hotel = booking?.room?.hotel;
     const room = booking?.room;
 
-    // 1. Pehle Hotel ki cover image check karein
+    
     if (hotel?.cover_image) {
       return `http://localhost:3000/uploads/hotels/${hotel.cover_image}`;
     }
-    // 2. Agar wo nahi hai, toh Room ki pehli image
+    
     if (room?.images?.[0]?.image_url) {
       return `http://localhost:3000${room.images[0].image_url}`;
     }
-    // 3. Last Fallback
+    
     return "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=800";
   };
 
-  // Date Formatting Helper
+  
   const formatDate = (dateStr) => {
     return new Date(dateStr).toLocaleDateString("en-IN", {
       day: "numeric",
@@ -92,7 +92,7 @@ const MyBookings = () => {
                 key={booking.id}
                 className="bg-white rounded-[3rem] border border-gray-100 shadow-sm flex flex-col lg:flex-row overflow-hidden hover:shadow-xl transition-all duration-500 group"
               >
-                {/* Image Section */}
+                {}
                 <div className="w-full lg:w-80 h-64 lg:h-auto relative overflow-hidden">
                   <img
                     src={getBookingImage(booking)}
@@ -104,7 +104,7 @@ const MyBookings = () => {
                   </div>
                 </div>
 
-                {/* Info Section */}
+                {}
                 <div className="flex-1 p-8 md:p-10 flex flex-col justify-between">
                   <div>
                     <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-8">
@@ -163,7 +163,7 @@ const MyBookings = () => {
                     </div>
                   </div>
 
-                  {/* Actions Area */}
+                  {}
                   <div className="mt-10 flex flex-wrap items-center justify-between gap-4">
                     <Link
                       to={`/hotel/${booking.room?.hotel?.id}`}

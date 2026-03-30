@@ -23,7 +23,7 @@ const AddHotel = () => {
     const file = e.target.files[0];
     if (file) {
       setImageFile(file);
-      setPreview(URL.createObjectURL(file)); // Temporary URL for preview
+      setPreview(URL.createObjectURL(file)); 
     }
   };
 
@@ -44,7 +44,7 @@ const AddHotel = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-3xl mx-auto bg-white rounded-[3rem] shadow-2xl overflow-hidden border border-gray-100">
-        {/* Header Section */}
+        {}
         <div className="bg-secondary p-10 text-white relative">
           <button
             onClick={() => navigate(-1)}
@@ -61,7 +61,7 @@ const AddHotel = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="p-10 space-y-8">
-          {/* Image Upload Box */}
+          {}
           <div className="relative group w-full h-64 bg-gray-50 rounded-[2.5rem] border-2 border-dashed border-gray-200 flex flex-col items-center justify-center cursor-pointer hover:border-primary transition-all overflow-hidden">
             {preview ? (
               <img
@@ -137,7 +137,7 @@ const AddHotel = () => {
   );
 };
 
-// Reusable Input Component
+
 const CustomInput = ({ label, placeholder, value, onChange }) => (
   <div className="flex flex-col gap-2">
     <label className="text-[10px] font-black text-gray-400 uppercase px-1 tracking-widest">

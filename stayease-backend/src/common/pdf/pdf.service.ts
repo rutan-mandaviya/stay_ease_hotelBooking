@@ -8,11 +8,11 @@ export class PdfService {
       const doc = new PDFDocument({ size: 'A4', margin: 50 });
       const chunks: Buffer[] = [];
 
-      // Data ko ek memory chunk mein collect karein
+      
       doc.on('data', (chunk) => chunks.push(chunk));
       doc.on('end', () => resolve(Buffer.concat(chunks)));
 
-      // --- PDF CONTENT START ---
+      
       doc.fontSize(25).text('STAYEASE INVOICE', { align: 'center' }).moveDown();
 
       doc.fontSize(12).text(`Booking ID: ${booking.id}`);
@@ -34,7 +34,7 @@ export class PdfService {
         .fontSize(18)
         .fillColor('green')
         .text(`Total Amount Paid: ₹${booking.total_price}`, { align: 'right' });
-      // --- PDF CONTENT END ---
+      
 
       doc.end();
     });

@@ -18,7 +18,7 @@ const Checkout = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentError, setPaymentError] = useState(null);
 
-  // Security: Agar booking data nahi hai toh wapas bhej do
+  
   useEffect(() => {
     if (!currentBooking || !clientSecret) {
       navigate("/");
@@ -32,7 +32,7 @@ const Checkout = () => {
     setIsProcessing(true);
     setPaymentError(null);
 
-    // 1. Confirm Payment on Stripe Side
+    
     const result = await stripe.confirmCardPayment(clientSecret, {
       payment_method: { card: elements.getElement(CardElement) },
     });
@@ -45,7 +45,7 @@ const Checkout = () => {
         console.log(
           "Payment was already successful! Moving to backend confirmation...",
         );
-        handleBackendUpdate(); // Naya function jo niche hai
+        handleBackendUpdate(); 
       } else {
         setPaymentError(result.error.message);
         setIsProcessing(false);
@@ -54,7 +54,7 @@ const Checkout = () => {
       if (result.paymentIntent.status === "succeeded") {
         console.log("Stripe Success! Confirming with backend...");
 
-        // ✅ Option B: Use currentBooking.id directly
+        
         const success = await dispatch(asyncConfirmPayment(currentBooking.id));
 
         if (success) {
@@ -85,7 +85,7 @@ const Checkout = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
-        {/* Left: Payment Form */}
+        {}
         <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
           <h2 className="text-2xl font-bold text-secondary mb-6 flex items-center gap-2">
             <CreditCard className="text-primary" /> Secure Payment
@@ -113,7 +113,7 @@ const Checkout = () => {
 
             <Button
               className="w-full py-4 text-lg shadow-lg shadow-primary/20"
-              disabled={isProcessing || !stripe || !clientSecret} // <--- 'isProcessing' check is crucial
+              disabled={isProcessing || !stripe || !clientSecret} 
             >
               {isProcessing
                 ? "Processing..."
@@ -122,7 +122,7 @@ const Checkout = () => {
           </form>
         </div>
 
-        {/* Right: Summary */}
+        {}
         <div className="bg-secondary p-8 rounded-3xl text-white flex flex-col justify-between">
           <div>
             <h3 className="text-xl font-bold mb-6">Booking Summary</h3>

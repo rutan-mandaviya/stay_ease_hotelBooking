@@ -53,7 +53,7 @@ const OwnerDashboard = () => {
             <Plus size={20} /> List New Hotel
           </Link>
         </div>{" "}
-        {/* 1. Top Stats Cards */}
+        {}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
           <StatCard
             title="Total Revenue"
@@ -85,7 +85,7 @@ const OwnerDashboard = () => {
             />
           </Link>
         </div>
-        {/* 2. Recent Bookings Table */}
+        {}
         <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
           <div className="p-6 border-b border-gray-50 flex justify-between items-center">
             <h2 className="text-xl font-bold text-secondary">
@@ -148,7 +148,7 @@ const OwnerDashboard = () => {
   );
 };
 
-// Reusable StatCard Component
+
 const StatCard = ({ title, value, icon, color }) => (
   <div
     className={`p-8 rounded-[2rem] shadow-sm border border-gray-100 flex items-center gap-6 bg-white`}

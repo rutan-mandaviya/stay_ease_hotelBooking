@@ -50,7 +50,7 @@ export class MediaController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.HOTEL_OWNER)
   @Post('rooms/:id/images')
-  @UseInterceptors(FilesInterceptor('images', 5, multerOptions('rooms'))) // 'images' field name frontend se match karega, max 5 files
+  @UseInterceptors(FilesInterceptor('images', 5, multerOptions('rooms'))) 
   uploadImages(
     @Param('id') id: string,
     @UploadedFiles() files: Array<Express.Multer.File>,

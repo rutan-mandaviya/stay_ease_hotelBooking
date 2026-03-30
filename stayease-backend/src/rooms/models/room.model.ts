@@ -50,7 +50,7 @@ export class Room extends Model<Room> {
   declare price_per_night: number;
 
   @Column({ type: DataType.JSON, allowNull: true })
-  declare amenities: string[]; // Stores ["wifi", "ac", "tv"]
+  declare amenities: string[]; 
 
   @Column({ type: DataType.BOOLEAN, defaultValue: true })
   declare is_active: boolean;

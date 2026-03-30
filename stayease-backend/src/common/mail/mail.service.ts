@@ -21,7 +21,7 @@ export class MailService {
     });
   }
 
-  // REUSABLE GENERIC METHOD
+  
 
   async sendMail(
     to: string,
@@ -45,7 +45,7 @@ export class MailService {
       return false;
     }
   }
-  // SPECIFIC WRAPPER FOR BOOKINGS
+  
   async sendBookingConfirmation(
     to: string,
     data: BookingConfirmationTemplateData,

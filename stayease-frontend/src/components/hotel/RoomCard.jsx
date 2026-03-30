@@ -12,7 +12,7 @@ const RoomCard = ({ room, hotelId }) => {
   const { isAuthenticated } = useSelector((state) => state.auth);
   const { loading: bookingLoading } = useSelector((state) => state.booking);
 
-  // Default Dates logic
+  
   const today = new Date().toISOString().split("T")[0];
   const tomorrow = new Date(new Date().getTime() + 86400000)
     .toISOString()
@@ -36,7 +36,7 @@ const RoomCard = ({ room, hotelId }) => {
 
   return (
     <div className="bg-white border border-gray-100 rounded-3xl p-6 flex flex-col xl:flex-row gap-6 hover:shadow-lg transition-all">
-      {/* 1. Room Info Section */}
+      {}
       <div className="flex-1">
         <div className="flex items-center gap-2 mb-2">
           <span className="bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-md">
@@ -72,7 +72,7 @@ const RoomCard = ({ room, hotelId }) => {
         </ul>
       </div>
 
-      {/* 2. Compact Date Selection Section */}
+      {}
       <div className="flex flex-col sm:flex-row gap-3 bg-gray-50 p-4 rounded-2xl border border-gray-100 self-center">
         <div className="space-y-1">
           <p className="text-[10px] font-bold text-gray-400 uppercase ml-1">
@@ -112,7 +112,7 @@ const RoomCard = ({ room, hotelId }) => {
         </div>
       </div>
 
-      {/* 3. Pricing & Action */}
+      {}
       <div className="xl:w-48 flex flex-col justify-center items-center xl:items-end gap-3 border-t xl:border-t-0 xl:border-l border-gray-100 pt-4 xl:pt-0 xl:pl-6">
         <div className="text-center xl:text-right">
           <p className="text-2xl font-black text-secondary">

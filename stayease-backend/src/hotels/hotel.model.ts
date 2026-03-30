@@ -1,4 +1,4 @@
-// src/hotels/hotel.model.ts
+
 import {
   BelongsTo,
   Column,

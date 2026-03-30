@@ -43,7 +43,7 @@ const MyHotels = () => {
                 key={hotel.id}
                 className="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden flex flex-col group hover:shadow-xl transition-all duration-500"
               >
-                {/* Image Section */}
+                {}
                 <div className="relative h-56">
                   <img
                     src={

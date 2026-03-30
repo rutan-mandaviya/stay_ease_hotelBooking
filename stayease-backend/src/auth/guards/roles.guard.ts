@@ -1,4 +1,4 @@
-// src/auth/guards/roles.guard.ts
+
 import {
   Injectable,
   CanActivate,
@@ -18,7 +18,7 @@ export class RolesGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
-    if (!required) return true; // no @Roles() = open to all authenticated users
+    if (!required) return true; 
 
     const { user } = context
       .switchToHttp()

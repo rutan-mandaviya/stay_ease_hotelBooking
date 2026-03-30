@@ -1,4 +1,3 @@
-// src/auth/auth.service.ts
 import {
   BadRequestException,
   ForbiddenException,
@@ -8,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/sequelize';
-import * as bcrypt from 'bcrypt'; // Safer import for TS
+import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { User, UserRole } from '../users/user.model';
 import { RegisterDto } from './dto/register.dto';
@@ -49,7 +48,6 @@ export class AuthService {
       phone: dto.phone,
     });
 
-    // Extracting fields to avoid returning password_hash
     const { id, name, email, role, phone } = user;
     const newUser = { id, name, email, role, phone };
 
@@ -105,7 +103,7 @@ export class AuthService {
       email: user.email,
       role: user.role,
     };
-    // Standard Production Times
+
     const access_token = this.jwtService.sign(payload, {
       secret: this.config.get('JWT_SECRET'),
       expiresIn: '2d',

@@ -42,7 +42,7 @@ import { Payment } from './payments/payment.model';
         database: config.get('DB_NAME'),
         models: [User, Hotel, Room, RoomImage, Booking, Review, Payment],
         autoLoadModels: true,
-        synchronize: true, // dev only — disable in prod
+        synchronize: true, 
       }),
       inject: [ConfigService],
     }),

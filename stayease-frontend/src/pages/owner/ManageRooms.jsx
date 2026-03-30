@@ -18,12 +18,12 @@ const ManageRooms = () => {
   const handleDelete = async (roomId) => {
     const res = await dispatch(asyncDeleteRoom(roomId));
     if (res.success) {
-      // Data refresh hone par inactive rooms filter ho jayenge
+      
       dispatch(asyncFetchHotelById(hotelId));
     }
   };
 
-  // ✨ Logic: Sirf wahi rooms dikhayenge jo delete (inactive) nahi huye hain
+  
   const activeRooms = selectedHotel?.rooms?.filter(
     (room) => room.is_active !== false,
   );
@@ -40,7 +40,7 @@ const ManageRooms = () => {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       <div className="max-w-6xl mx-auto py-12 px-4">
-        {/* Header Section */}
+        {}
         <div className="flex justify-between items-center mb-10">
           <div className="flex items-center gap-4">
             <Link
@@ -66,14 +66,14 @@ const ManageRooms = () => {
           </Link>
         </div>
 
-        {/* Room Grid */}
+        {}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {activeRooms?.map((room) => (
             <div
               key={room.id}
               className="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden group hover:shadow-xl transition-all duration-500"
             >
-              {/* Room Image Display */}
+              {}
               <div className="relative h-48 overflow-hidden bg-gray-200">
                 {room.images && room.images.length > 0 ? (
                   <img
@@ -111,7 +111,7 @@ const ManageRooms = () => {
                   </div>
                 </div>
 
-                {/* Amenities Tags */}
+                {}
                 <div className="flex flex-wrap gap-2 mb-6 min-h-[32px]">
                   {room.amenities?.map((amenity, idx) => (
                     <span
@@ -134,7 +134,7 @@ const ManageRooms = () => {
           ))}
         </div>
 
-        {/* Empty State Check */}
+        {}
         {(!activeRooms || activeRooms.length === 0) && (
           <div className="text-center py-24 bg-white rounded-[3rem] border-2 border-dashed border-gray-100 shadow-inner">
             <div className="bg-gray-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">

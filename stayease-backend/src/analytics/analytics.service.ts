@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable, HttpStatus, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
@@ -18,7 +19,6 @@ export class AnalyticsService {
   ) {}
 
   async getOwnerFullDashboard(ownerId: string) {
-    // 1. Fetch Owner's Hotels
     const hotels = await this.hotelModel.findAll({
       where: { owner_id: ownerId },
       attributes: ['id'],
@@ -33,7 +33,6 @@ export class AnalyticsService {
       });
     }
 
-    // 2. Aggregate Stats (Revenue & Total Count)
     const stats = (await this.bookingModel.findOne({
       attributes: [
         [Sequelize.fn('SUM', Sequelize.col('total_price')), 'revenue'],
@@ -52,7 +51,6 @@ export class AnalyticsService {
       raw: true,
     })) as any;
 
-    // 3. Status Breakdown (For Charts)
     const breakdown = await this.bookingModel.findAll({
       attributes: [
         'status',
@@ -69,7 +67,6 @@ export class AnalyticsService {
       raw: true,
     });
 
-    // 4. Recent Bookings (Last 5 Bookings for the Table)
     const recentBookings = await this.bookingModel.findAll({
       limit: 5,
       order: [['created_at', 'DESC']],
@@ -85,7 +82,6 @@ export class AnalyticsService {
         },
       ],
       where: {
-        // Sirf is owner ke hotels ki bookings
         '$room.hotel_id$': { [Op.in]: hotelIds },
       } as any,
     });

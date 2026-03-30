@@ -1,4 +1,4 @@
-// src/auth/auth.module.ts
+
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -25,6 +25,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
-  exports: [JwtStrategy], // other modules need this when using JwtAuthGuard
+  exports: [JwtStrategy], 
 })
 export class AuthModule {}

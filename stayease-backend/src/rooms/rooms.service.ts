@@ -24,7 +24,7 @@ export class RoomsService {
     @InjectModel(Hotel) private hotelModel: typeof Hotel,
   ) {}
 
-  // 1. Add Room (Owner Only)
+  
   async create(hotelId: string, dto: CreateRoomDto, userId: string) {
     const hotel = await this.hotelModel.findByPk(hotelId);
     if (!hotel) throw new NotFoundException('Hotel not found');
@@ -40,7 +40,7 @@ export class RoomsService {
     return buildResponse(HttpStatus.CREATED, 'Room added successfully', room);
   }
 
-  // 2. List Rooms for a Hotel (Public)
+  
   async findAll(hotelId: string) {
     const rooms = await this.roomModel.findAll({
       where: { hotel_id: hotelId, is_active: true },
@@ -49,7 +49,7 @@ export class RoomsService {
     return buildResponse(HttpStatus.OK, 'Rooms fetched successfully', rooms);
   }
 
-  // 3. Room Detail
+  
   async findOne(id: string) {
     const room = await this.roomModel.findByPk(id, {
       include: [
@@ -64,7 +64,7 @@ export class RoomsService {
     return buildResponse(HttpStatus.OK, 'Room details fetched', room);
   }
 
-  // 4. Update Room (Owner Only)
+  
   async update(id: string, dto: UpdateRoomDto, userId: string) {
     const room = await this.roomModel.findByPk(id, {
       include: [{ model: Hotel, attributes: ['owner_id', 'name', 'city'] }],
@@ -79,7 +79,7 @@ export class RoomsService {
     return buildResponse(HttpStatus.OK, 'Room updated successfully', room);
   }
 
-  // 5. Upload Room Images
+  
   async uploadImages(
     roomId: string,
     files: Express.Multer.File[],
@@ -134,11 +134,11 @@ export class RoomsService {
         throw new ForbiddenException('You do not own this property');
       }
     } else {
-      // Agar room/hotel missing hai, toh hum record delete kar rahe hain (Orphaned cleanup)
+      
       console.log('Cleaning up orphaned record with no linked room/hotel');
     }
 
-    // 4. Database se record delete karein
+    
     await image.destroy();
 
     const finalMessage =
@@ -149,9 +149,9 @@ export class RoomsService {
     return buildResponse(HttpStatus.OK, finalMessage, null);
   }
 
-  // rooms.service.ts
+  
 
-  // rooms.service.ts
+  
 
   async remove(id: string, userId: string) {
     const room = await this.roomModel.findByPk(id, {
@@ -160,12 +160,12 @@ export class RoomsService {
 
     if (!room) throw new NotFoundException('Room not found');
 
-    // Security Check
+    
     if (room.hotel.owner_id !== userId) {
       throw new ForbiddenException('Bhai, ye aapka room nahi hai!');
     }
 
-    // ✨ Magic Line: Delete karne ke bajaye deactivate kar do
+    
     await room.update({ is_active: false });
 
     return buildResponse(

@@ -16,7 +16,7 @@ import { BullModule } from '@nestjs/bullmq';
     MailModule,
     PdfModule,
     BullModule.registerQueue({
-      name: 'mail-queue', // Payment module wali same queue
+      name: 'mail-queue',
     }),
   ],
 

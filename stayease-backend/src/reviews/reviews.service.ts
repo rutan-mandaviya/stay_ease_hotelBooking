@@ -21,7 +21,7 @@ export class ReviewsService {
   ) {}
 
   async create(dto: CreateReviewDto, userId: string) {
-    // 1. Validation Logic
+    
     const booking = await this.bookingModel.findOne({
       where: {
         id: dto.booking_id,
@@ -35,21 +35,21 @@ export class ReviewsService {
       throw new BadRequestException('Invalid booking or stay not completed.');
     }
 
-    // 2. Prevent Empty/Spam Comments
+    
     if (dto.comment && dto.comment.trim().length < 5) {
       throw new BadRequestException(
         'Comment must be at least 5 characters long.',
       );
     }
 
-    // 3. Prevent Duplicates
+    
     const existing = await this.reviewModel.findOne({
       where: { booking_id: dto.booking_id },
     });
     if (existing)
       throw new BadRequestException('You already reviewed this stay.');
 
-    // 4. Create
+    
     const review = await this.reviewModel.create({
       ...dto,
       user_id: userId,
@@ -68,12 +68,12 @@ export class ReviewsService {
 
     const { rows, count } = await this.reviewModel.findAndCountAll({
       where: { hotel_id: hotelId },
-      attributes: ['id', 'rating', 'comment', 'createdAt'], // Only essential fields
+      attributes: ['id', 'rating', 'comment', 'createdAt'], 
       include: [
         {
           model: User,
           as: 'user',
-          attributes: ['name'], // Only return name, not email/phone
+          attributes: ['name'], 
         },
       ],
       order: [['createdAt', 'DESC']],
@@ -93,7 +93,7 @@ export class ReviewsService {
     const review = await this.reviewModel.findByPk(id);
     if (!review) throw new NotFoundException('Review not found');
 
-    // Security: Only owner or admin
+    
     if (role !== UserRole.ADMIN && review.user_id !== userId) {
       throw new ForbiddenException('Unauthorized to delete this review.');
     }

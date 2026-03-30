@@ -2,18 +2,18 @@ import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-// Actions & Slices
+
 import { asyncLoadUser } from "./store/actions/authActions";
 import { setLoading } from "./store/reducers/authSlice";
 
 import ProtectedRoute from "./routes/ProtectedRoute";
 
-// Pages
+
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Home from "./pages/guest/Home";
 import HotelDetails from "./pages/guest/HotelDetails";
-import Checkout from "./pages/guest/Checkout"; // Naya Page
+import Checkout from "./pages/guest/Checkout"; 
 import BookingSuccess from "./pages/guest/BookingSuccess";
 import MyBookings from "./pages/guest/MyBookings";
 import OwnerDashboard from "./pages/owner/OwnerDashboard";
@@ -54,13 +54,13 @@ function App() {
 
   return (
     <Routes>
-      {/* --- PUBLIC ROUTES --- */}
+      {}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/" element={<Home />} />
       <Route path="/hotel/:id" element={<HotelDetails />} />
 
-      {/* --- PROTECTED GUEST ROUTES --- */}
+      {}
       <Route
         element={
           <ProtectedRoute allowedRoles={["guest", "hotel_owner", "admin"]} />
@@ -74,11 +74,11 @@ function App() {
         <Route path="/owner/dashboard" element={<OwnerDashboard />} />
         <Route path="/owner/add-hotel" element={<AddHotel />} />
         <Route path="/owner/my-hotels" element={<MyHotels />} />
-        {/* ✨ Naya Route: Hotel ID ke saath room add karne ke liye */}
+        {}
         <Route path="/owner/hotel/:hotelId/add-room" element={<AddRoom />} />
         <Route path="/owner/hotel/:hotelId/manage" element={<ManageRooms />} />
       </Route>
-      {/* --- ADMIN ONLY ROUTES --- */}
+      {}
       <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
         <Route
           path="/admin"
@@ -86,7 +86,7 @@ function App() {
         />
       </Route>
 
-      {/* --- 404 ROUTE --- */}
+      {}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

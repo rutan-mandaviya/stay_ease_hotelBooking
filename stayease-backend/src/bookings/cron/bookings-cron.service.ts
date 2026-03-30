@@ -10,7 +10,7 @@ export class BookingsCronService {
 
   constructor(@InjectModel(Booking) private bookingModel: typeof Booking) {}
 
-  // Yeh function har raat 12:01 AM par chalega
+  
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async handleCheckoutAutomation() {
     this.logger.log('Running Auto-Complete Cron Job...');

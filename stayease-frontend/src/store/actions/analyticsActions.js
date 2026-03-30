@@ -10,7 +10,7 @@ export const asyncFetchOwnerDashboard = () => async (dispatch) => {
     dispatch(setLoading(true));
     const response = await API.get("/analytics/owner-dashboard");
 
-    // Backend returns: { data: { stats, statusBreakdown, recentBookings } }
+    
     dispatch(setDashboardData(response.data));
   } catch (error) {
     const msg = error.response?.data?.message || "Failed to load dashboard";

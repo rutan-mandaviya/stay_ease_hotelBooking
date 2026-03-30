@@ -26,7 +26,7 @@ export class MailProcessor extends WorkerHost {
     this.logger.log(`Processing invoice for Booking ID: ${bookingId}`);
 
     try {
-      // 1. Fetch Full Booking Details (Taaki PDF mein Hotel/Room name aa sake)
+      
       const booking = await this.bookingModel.findByPk(bookingId, {
         include: [
           { model: User, attributes: ['name', 'email'] },
@@ -44,17 +44,17 @@ export class MailProcessor extends WorkerHost {
         return;
       }
 
-      // 2. Generate PDF Buffer
+      
       const pdfBuffer = await this.pdfService.generateBookingInvoice(booking);
 
-      // 3. Send Email
+      
       await this.mailService.sendBookingConfirmation(email, booking, pdfBuffer);
 
       this.logger.log(`✅ Invoice successfully sent to: ${email}`);
       return { status: 'success' };
     } catch (error) {
       this.logger.error(`❌ Failed to process invoice job: ${error.message}`);
-      throw error; // BullMQ automatically retry karega
+      throw error; 
     }
   }
 }

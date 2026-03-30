@@ -42,7 +42,7 @@ const AddRoom = () => {
   const [images, setImages] = useState([]);
   const [previews, setPreviews] = useState([]);
 
-  // Toggle Amenity Logic
+  
   const toggleAmenity = (name) => {
     setRoomData((prev) => ({
       ...prev,
@@ -91,7 +91,7 @@ const AddRoom = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="p-10 space-y-10">
-            {/* Image Gallery */}
+            {}
             <div className="space-y-4">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
                 Gallery
@@ -123,7 +123,7 @@ const AddRoom = () => {
               </div>
             </div>
 
-            {/* Core Fields */}
+            {}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <InputField
                 label="Room No."
@@ -167,7 +167,7 @@ const AddRoom = () => {
               />
             </div>
 
-            {/* Amenities Grid */}
+            {}
             <div className="space-y-4">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
                 Amenities
@@ -201,7 +201,7 @@ const AddRoom = () => {
   );
 };
 
-// Reusable Input
+
 const InputField = ({
   label,
   icon,

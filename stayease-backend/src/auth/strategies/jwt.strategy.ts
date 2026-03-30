@@ -1,4 +1,4 @@
-// src/auth/strategies/jwt.strategy.ts
+
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/sequelize';
@@ -23,6 +23,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(payload: JwtPayloadDto) {
     const user = await this.userModel.findByPk(payload.id);
     if (!user) throw new UnauthorizedException('User no longer exists');
-    return user; // attached to req.user
+    return user; 
   }
 }

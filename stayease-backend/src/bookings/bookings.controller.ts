@@ -69,11 +69,11 @@ export class BookingsController {
     return this.bookingsService.confirm(id);
   }
 
-  // bookings.controller.ts
+  
 
   @Get(':id/invoice')
   async downloadInvoice(@Param('id') id: string, @Res() res: any) {
-    // Service se PDF buffer mangaiye
+    
     const buffer = await this.bookingsService.getInvoiceBuffer(id);
 
     res.set({

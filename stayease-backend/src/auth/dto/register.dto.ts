@@ -1,4 +1,4 @@
-// src/auth/dto/register.dto.ts
+
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsEmail,

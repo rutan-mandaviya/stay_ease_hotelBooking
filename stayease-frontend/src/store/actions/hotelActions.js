@@ -7,9 +7,9 @@ import {
   setOwnerHotels,
 } from "../reducers/hotelSlice";
 
-// 1. Fetch All Hotels
-// src/store/actions/hotelActions.js
-// src/store/actions/hotelActions.js
+
+
+
 
 export const asyncFetchHotels =
   (params = {}) =>
@@ -17,8 +17,8 @@ export const asyncFetchHotels =
     try {
       dispatch(setLoading(true));
 
-      // ✨ Step 1: Clean Params (Remove empty strings or nulls)
-      // Isse empty minPrice/maxPrice backend par nahi jayenge
+      
+      
       const cleanParams = Object.fromEntries(
         Object.entries(params).filter(
           ([, value]) => value !== "" && value !== null && value !== undefined,
@@ -29,8 +29,8 @@ export const asyncFetchHotels =
 
       console.log("Hotels API Full Response:", response.data);
 
-      // ✨ Step 2: Safe Data Extraction
-      // Aapke backend format ke hisaab se: response.data.data ya response.data.hotels
+      
+      
       const finalData =
         response.data.data || response.data.hotels || response.data;
 
@@ -46,28 +46,28 @@ export const asyncFetchHotelById = (id) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const { data } = await API.get(`/hotels/${id}`);
-    console.log("selected Hotels API Data:", data); //
-    // Data mein hotel details + rooms array hona chahiye
+    console.log("selected Hotels API Data:", data); 
+    
     dispatch(setSelectedHotel(data));
   } catch (error) {
     dispatch(setHotelError(error.response?.data?.message || "Hotel not found"));
   }
 };
 
-// src/store/actions/hotelActions.js
+
 
 export const asyncAddHotel = (hotelData) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
 
-    // 1. Create FormData (Crucial for images)
+    
     const formData = new FormData();
     formData.append("name", hotelData.name);
     formData.append("city", hotelData.city);
     formData.append("address", hotelData.address);
     formData.append("description", hotelData.description);
 
-    // 'image' wahi key honi chahiye jo backend ke FileInterceptor mein hai
+    
     if (hotelData.image) {
       formData.append("image", hotelData.image);
     }
@@ -88,10 +88,10 @@ export const asyncAddHotel = (hotelData) => async (dispatch) => {
 export const asyncFetchOwnerHotels = () => async (dispatch) => {
   try {
     dispatch(setLoading(true));
-    // Fixed URL matching backend controller
+    
     const response = await API.get("/hotels/owner/my-properties");
 
-    // Hamara backend response.data mein hotels bhej raha hai
+    
     dispatch(setOwnerHotels(response.data));
   } catch (error) {
     console.error("Fetch Hotels Error:", error);

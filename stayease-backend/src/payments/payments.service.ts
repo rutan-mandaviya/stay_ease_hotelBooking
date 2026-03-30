@@ -37,7 +37,7 @@ export class PaymentsService {
     const booking = await this.bookingModel.findByPk(bookingId);
     if (!booking) throw new NotFoundException('Booking not found');
 
-    // 1. CHECK FOR EXISTING PENDING PAYMENT (Idempotency)
+    
     let payment = await this.paymentModel.findOne({
       where: { booking_id: bookingId, status: PaymentStatus.PENDING },
     });
@@ -45,13 +45,13 @@ export class PaymentsService {
     let clientSecret: string | null;
 
     if (payment) {
-      // Purane intent ko retrieve karein agar wo already bana hua hai
+      
       const intent = await this.stripe.paymentIntents.retrieve(
         payment.stripe_intent_id,
       );
       clientSecret = intent.client_secret;
     } else {
-      // Naya intent banayein
+      
       const intent = await this.stripe.paymentIntents.create({
         amount: Math.round(booking.total_price * 100),
         currency: 'inr',
@@ -70,12 +70,12 @@ export class PaymentsService {
 
     return buildResponse(HttpStatus.CREATED, 'Payment intent ready', {
       clientSecret,
-      paymentId: payment.id, // Debugging ke liye zaruri hai
+      paymentId: payment.id, 
     });
   }
 
   async markAsPaid(bookingId: string) {
-    // 2. USE TRANSACTION FOR CONSISTENCY
+    
     const transaction = await this.bookingModel.sequelize!.transaction();
 
     try {
@@ -88,14 +88,14 @@ export class PaymentsService {
       if (!payment) throw new NotFoundException('Payment not found');
       if (payment.status === PaymentStatus.PAID) return payment;
 
-      // Security check with Stripe
+      
       const intent = await this.stripe.paymentIntents.retrieve(
         payment.stripe_intent_id,
       );
       if (intent.status !== 'succeeded')
         throw new BadRequestException('Payment not verified');
 
-      // Atomic Updates
+      
       await payment.update({ status: PaymentStatus.PAID }, { transaction });
       await payment.booking.update(
         { status: BookingStatus.CONFIRMED, is_paid: true },
@@ -104,7 +104,7 @@ export class PaymentsService {
 
       await transaction.commit();
 
-      // 3. BULLMQ TRIGGER
+      
       await this.mailQueue.add('send-invoice', {
         bookingId: payment.booking_id,
         email: payment.booking.user.email,
@@ -121,7 +121,7 @@ export class PaymentsService {
     }
   }
 
-  // 2. GET Payment by Booking ID
+  
   async getByBooking(bookingId: string) {
     const payment = await this.paymentModel.findOne({
       where: { booking_id: bookingId },
@@ -131,14 +131,14 @@ export class PaymentsService {
     return buildResponse(HttpStatus.OK, 'Payment details fetched', payment);
   }
 
-  // 4. Refund Logic
+  
   async refund(id: string) {
     const payment = await this.paymentModel.findByPk(id);
     if (!payment || payment.status !== PaymentStatus.PAID) {
       throw new BadRequestException('Only PAID payments can be refunded');
     }
 
-    // Call Stripe Refund API
+    
     await this.stripe.refunds.create({
       payment_intent: payment.stripe_intent_id,
     });
@@ -146,7 +146,7 @@ export class PaymentsService {
     payment.status = PaymentStatus.REFUNDED;
     await payment.save();
 
-    // Cancel the Booking
+    
     await this.bookingModel.update(
       { status: BookingStatus.CANCELLED },
       { where: { id: payment.booking_id } },

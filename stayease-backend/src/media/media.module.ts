@@ -5,11 +5,11 @@ import { Room } from 'src/rooms/models/room.model';
 import { MediaController } from './media.controller';
 import { RoomsModule } from 'src/rooms/rooms.module';
 
-// src/media/media.module.ts
+
 @Module({
   imports: [
     RoomsModule,
-    SequelizeModule.forFeature([Room, RoomImage]), // Model access
+    SequelizeModule.forFeature([Room, RoomImage]), 
   ],
   controllers: [MediaController],
 })

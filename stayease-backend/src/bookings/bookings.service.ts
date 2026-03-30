@@ -33,7 +33,7 @@ export class BookingsService {
     private sequelize: Sequelize,
   ) {}
 
-  // 1. Create Booking (Guest)
+  
   async create(dto: CreateBookingDto, userId: string) {
     const { room_id, check_in_date, check_out_date } = dto;
     const transaction = await this.sequelize.transaction();
@@ -41,12 +41,12 @@ export class BookingsService {
     try {
       const room = await this.roomModel.findByPk(room_id, {
         transaction,
-        lock: transaction.LOCK.UPDATE, // Room row lock
+        lock: transaction.LOCK.UPDATE, 
       });
 
       if (!room) throw new NotFoundException('Room not found');
 
-      // Availability Check
+      
       const overlap = await this.bookingModel.findOne({
         where: {
           room_id,
@@ -86,13 +86,13 @@ export class BookingsService {
       throw error;
     }
   }
-  // 2. List Bookings (Admin sees all, Guest sees own)
+  
   async findAll(userId: string, role: UserRole, query: GetBookingsQueryDto) {
     const { page = 1, limit = 10, status } = query;
 
     const offset = (Number(page) - 1) * Number(limit);
 
-    // Build Filter
+    
     const where: Record<string, any> =
       role === UserRole.ADMIN ? {} : { user_id: userId };
     if (status) where.status = status;
@@ -124,7 +124,7 @@ export class BookingsService {
     });
   }
 
-  // 3. Booking Detail
+  
   async findOne(id: string, userId: string, role: UserRole) {
     const booking = await this.bookingModel.findByPk(id, {
       include: [
@@ -143,7 +143,7 @@ export class BookingsService {
 
     if (!booking) throw new NotFoundException('Booking not found');
 
-    // Authorization: Only owner of booking, hotel owner, or admin
+    
     if (role === UserRole.GUEST && booking.user_id !== userId) {
       throw new ForbiddenException('Access denied');
     }
@@ -151,7 +151,7 @@ export class BookingsService {
     return buildResponse(HttpStatus.OK, 'Booking detail', booking);
   }
 
-  // 4. Cancel Booking (Guest)
+  
   async cancel(id: string, userId: string) {
     const booking = await this.bookingModel.findByPk(id);
     if (!booking) throw new NotFoundException('Booking not found');
@@ -161,25 +161,25 @@ export class BookingsService {
     const now = new Date();
     const checkIn = new Date(booking.check_in_date);
 
-    // 1. Check if it's too late (Already checked in or past)
+    
     if (checkIn <= now) {
       throw new BadRequestException(
         'Cannot cancel on or after the check-in date',
       );
     }
 
-    // 2. Calculate Refund Percentage
+    
     const hoursDiff = (checkIn.getTime() - now.getTime()) / (1000 * 3600);
     let refundAmount = Number(booking.total_price);
 
     if (hoursDiff < 24) {
-      refundAmount = refundAmount * 0.5; // 50% penalty
+      refundAmount = refundAmount * 0.5; 
     }
 
-    // 3. Update status and log refund (Database mein 'refund_amount' column add kar sakte hain)
+    
     await booking.update({
       status: BookingStatus.CANCELLED,
-      // total_price: refundAmount // Optional: Refund ke baad bacha hua amount update karein
+      
     });
 
     return buildResponse(
@@ -189,16 +189,16 @@ export class BookingsService {
     );
   }
 
-  // 5. Confirm Booking (Admin/Owner)
-  // Admin confirm logic ko Payment confirmation se sync karein
+  
+  
   async confirm(id: string) {
     const booking = await this.bookingModel.findByPk(id, { include: [User] });
     if (!booking) throw new NotFoundException('Booking not found');
 
-    // Status update
+    
     await booking.update({ status: BookingStatus.CONFIRMED, is_paid: true });
 
-    // Use the same Queue as Payment for consistency
+    
     await this.mailQueue.add('send-invoice', {
       bookingId: booking.id,
       email: booking.user.email,
@@ -207,10 +207,10 @@ export class BookingsService {
     return buildResponse(HttpStatus.OK, 'Booking confirmed manually', booking);
   }
 
-  // bookings.service.ts
+  
 
   async getInvoiceBuffer(id: string): Promise<Buffer> {
-    // 1. Fetch Booking with ALL relations
+    
     const booking = await this.bookingModel.findByPk(id, {
       include: [
         {
@@ -240,8 +240,8 @@ export class BookingsService {
       );
     }
 
-    // 2. Use PdfService to create the actual Buffer
-    // Humne wahi method use kiya jo BullMQ processor mein use ho raha hai
+    
+    
     try {
       const buffer = await this.pdfService.generateBookingInvoice(booking);
       return buffer;

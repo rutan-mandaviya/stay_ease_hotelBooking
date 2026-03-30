@@ -17,7 +17,7 @@ export const authSlice = createSlice({
       state.token = action.payload.token;
       state.isAuthenticated = true;
       state.loading = false;
-      state.error = null; // Clear error on success
+      state.error = null; 
     },
     removeUser: (state) => {
       state.user = null;
@@ -26,7 +26,7 @@ export const authSlice = createSlice({
       state.loading = false;
       state.error = null;
       localStorage.removeItem("token");
-      localStorage.removeItem("refresh_token"); // Clean both
+      localStorage.removeItem("refresh_token"); 
     },
     setLoading: (state, action) => {
       state.loading = action.payload;

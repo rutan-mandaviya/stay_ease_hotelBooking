@@ -2,7 +2,7 @@ import API from "../../api/api.config";
 
 export const asyncAddRoom = (hotelId, roomData) => async () => {
   try {
-    // 1. Create Room (Metadata)
+    
     const response = await API.post(`/hotels/${hotelId}/rooms`, {
       room_number: roomData.room_number,
       room_type: roomData.room_type,
@@ -34,7 +34,7 @@ export const asyncAddRoom = (hotelId, roomData) => async () => {
 
     return { success: true };
   } catch (error) {
-    // Agar TypeError (reading 'id') aata hai, toh wo yahan catch hoga
+    
     console.error("🚩 API ERROR:", error.message);
     if (error.response) {
       console.error("Backend Error Data:", error.response.data);
@@ -47,7 +47,7 @@ export const asyncAddRoom = (hotelId, roomData) => async () => {
     };
   }
 };
-// src/store/actions/roomActions.js
+
 
 export const asyncDeleteRoom = (roomId) => async (dispatch) => {
   try {

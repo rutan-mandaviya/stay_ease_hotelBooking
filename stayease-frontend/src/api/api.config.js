@@ -21,14 +21,14 @@ API.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // ERROR 1: Agar refresh token wali API khud fail ho jaye (401), toh loop break karo
+    
     if (originalRequest.url.includes("/auth/refresh")) {
       localStorage.clear();
       window.location.href = "/login";
       return Promise.reject(error);
     }
 
-    // ERROR 2: Agar normal API 401 de aur humne abhi tak retry nahi kiya
+    
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
@@ -52,7 +52,7 @@ API.interceptors.response.use(
           `Bearer ${data.access_token}`;
         return API(originalRequest);
       } catch (refreshError) {
-        // Agar yahan fail hua, toh matlb refresh token bekar hai
+        
         localStorage.clear();
         window.location.href = "/login";
         return Promise.reject(refreshError);

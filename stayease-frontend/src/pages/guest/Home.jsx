@@ -4,14 +4,14 @@ import { asyncFetchHotels } from "../../store/actions/hotelActions";
 import { updateFilters } from "../../store/reducers/hotelSlice";
 import Navbar from "../../components/layout/Navbar";
 import FilterBar from "../../components/home/FilterBar";
-import HotelCard from "../../components/hotel/HotelCard"; // Ensure this component exists
+import HotelCard from "../../components/hotel/HotelCard"; 
 import { Sparkles } from "lucide-react";
 
 const Home = () => {
   const dispatch = useDispatch();
   const { hotels, loading, filters } = useSelector((state) => state.hotel);
 
-  // Initial Fetch
+  
   useEffect(() => {
     dispatch(asyncFetchHotels(filters));
   }, [dispatch]);
@@ -28,7 +28,7 @@ const Home = () => {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
 
-      {/* Hero Section */}
+      {}
       <div className="bg-secondary pt-24 pb-32 px-4 text-center">
         <div className="max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-white/10 text-primary px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-6">
@@ -44,14 +44,14 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Filter Component */}
+      {}
       <FilterBar
         filters={filters}
         onFilterChange={handleFilterUpdate}
         onSearch={handleSearch}
       />
 
-      {/* Hotel Listings */}
+      {}
       <div className="max-w-7xl mx-auto px-4 pb-20">
         <div className="flex justify-between items-end mb-10">
           <div>

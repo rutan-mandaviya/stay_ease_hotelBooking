@@ -20,7 +20,7 @@ import { JwtPayloadDto } from 'src/common/dto/jwt-payload.dto';
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
-  // 1. POST /reviews — Guest only, for completed bookings
+  
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.GUEST)
   @Post()
@@ -28,13 +28,13 @@ export class ReviewsController {
     return this.reviewsService.create(dto, req.user.id);
   }
 
-  // 2. GET /reviews/hotel/:hotelId — Public reviews list for a hotel
+  
   @Get('hotel/:hotelId')
   findByHotel(@Param('hotelId') hotelId: string) {
     return this.reviewsService.findByHotel(hotelId);
   }
 
-  // 3. DELETE /reviews/:id — Delete own review or any if Admin
+  
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.GUEST, UserRole.ADMIN)
   @Delete(':id')

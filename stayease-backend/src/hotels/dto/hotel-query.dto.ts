@@ -1,4 +1,4 @@
-// hotel-query.dto.ts
+
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsNumberString, IsString } from 'class-validator';
 
@@ -11,7 +11,7 @@ export class HotelQueryDto {
   @IsString()
   city?: string;
 
-  // ✨ Naye Fields add kiye
+  
   @ApiPropertyOptional({ example: '500' })
   @IsOptional()
   @IsNumberString()

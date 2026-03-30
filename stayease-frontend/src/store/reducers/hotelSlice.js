@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  hotels: [], // Public search results ke liye
-  ownerHotels: [], // ✨ Dashboard mein owner ke apne hotels ke liye
+  hotels: [], 
+  ownerHotels: [], 
   selectedHotel: null,
   loading: false,
   error: null,
@@ -23,7 +23,7 @@ export const hotelSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
-    // ✨ Naya reducer jo aap actions mein use kar rahe ho
+    
     setOwnerHotels: (state, action) => {
       state.ownerHotels = action.payload;
       state.loading = false;
@@ -46,7 +46,7 @@ export const hotelSlice = createSlice({
   },
 });
 
-// Saare actions export karein (setOwnerHotels mat bhoolna)
+
 export const {
   setHotels,
   setOwnerHotels,

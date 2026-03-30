@@ -6,10 +6,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Op, Sequelize, WhereOptions } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 import { Hotel } from './hotel.model';
 import { User } from '../users/user.model';
-// import { Review } from '../reviews/review.model'; // Future reference for Module 6
+
 import { CreateHotelDto } from './dto/create-hotel.dto';
 import { UpdateHotelDto } from './dto/update-hotel.dto';
 import { HotelQueryDto } from './dto/hotel-query.dto';
@@ -22,7 +22,6 @@ import { RoomImage } from 'src/rooms/models/room-image.model';
 export class HotelsService {
   constructor(@InjectModel(Hotel) private hotelModel: typeof Hotel) {}
 
-  // ── CREATE ──────────────────────────────────────────────
   async create(
     dto: CreateHotelDto,
     ownerId: string,
@@ -31,7 +30,7 @@ export class HotelsService {
     const hotel = await this.hotelModel.create({
       ...dto,
       owner_id: ownerId,
-      cover_image: file ? file.filename : null, // Make sure aapke Hotel model mein 'images' column hai
+      cover_image: file ? file.filename : null,
     });
 
     return buildResponse(
@@ -40,7 +39,7 @@ export class HotelsService {
       hotel,
     );
   }
-  // ── LIST (Public with Pagination & Search) ──────────────
+
   async findAll(query: HotelQueryDto) {
     const { page = 1, limit = 10, city, search, minPrice, maxPrice } = query;
     const offset = (Number(page) - 1) * Number(limit);
@@ -50,7 +49,6 @@ export class HotelsService {
     if (city) where.city = { [Op.like]: `%${city}%` };
     if (search) where.name = { [Op.like]: `%${search}%` };
 
-    // ✨ Price Filter Logic (Subquery)
     if (minPrice || maxPrice) {
       const min = minPrice || 0;
       const max = maxPrice || 999999;
@@ -69,21 +67,20 @@ export class HotelsService {
       offset,
       attributes: {
         include: [
-          // Average Rating
           [
             Sequelize.literal(
               `(SELECT COALESCE(AVG(rating), 0) FROM reviews WHERE reviews.hotel_id = Hotel.id)`,
             ),
             'avg_rating',
           ],
-          // Total Reviews
+
           [
             Sequelize.literal(
               `(SELECT COUNT(*) FROM reviews WHERE reviews.hotel_id = Hotel.id)`,
             ),
             'total_reviews',
           ],
-          // ✨ Get Starting Price (Min Price among all active rooms)
+
           [
             Sequelize.literal(
               `(SELECT MIN(price_per_night) FROM rooms WHERE rooms.hotel_id = Hotel.id AND rooms.is_active = true)`,
@@ -110,7 +107,6 @@ export class HotelsService {
     });
   }
 
-  // Method ka naam fixed: findOwnerHotels
   async findOwnerHotels(ownerId: string) {
     const hotels = await this.hotelModel.findAll({
       where: { owner_id: ownerId },
@@ -135,7 +131,7 @@ export class HotelsService {
     });
 
     return buildResponse(HttpStatus.OK, 'Owner hotels fetched', hotels);
-  } // ── DETAIL (With Average Rating Logic) ──────────────────
+  }
   async findOne(id: string) {
     try {
       const hotel = await this.hotelModel.findByPk(id, {
@@ -146,11 +142,11 @@ export class HotelsService {
             attributes: ['id', 'name', 'email'],
           },
           {
-            model: Room, // Room ko yahan include karein, User ke andar nahi
-            as: 'rooms', // Ensure this alias exists in Hotel model
+            model: Room,
+            as: 'rooms',
             include: [
               { model: RoomImage, as: 'images', attributes: ['image_url'] },
-            ], // Room images ke liye
+            ],
           },
         ],
         attributes: {
@@ -179,14 +175,12 @@ export class HotelsService {
 
       return buildResponse(HttpStatus.OK, 'Hotel details retrieved', hotel);
     } catch (error) {
-      console.error('DEBUG ERROR:', error); // Terminal mein asli error yahan dikhega
+      console.error('DEBUG ERROR:', error);
       throw new InternalServerErrorException(error.message);
     }
   }
 
-  // ── UPDATE ──────────────────────────────────────────────
   async update(id: string, dto: UpdateHotelDto, userId: string) {
-    // findByPk use karke directly model instance nikalte hain
     const hotel = await this.hotelModel.findByPk(id);
     if (!hotel) throw new NotFoundException('Hotel not found');
 
@@ -196,12 +190,10 @@ export class HotelsService {
     return buildResponse(HttpStatus.OK, 'Hotel updated successfully', hotel);
   }
 
-  // ── SOFT DELETE ─────────────────────────────────────────
   async remove(id: string, user: { id: string; role: UserRole }) {
     const hotel = await this.hotelModel.findByPk(id);
     if (!hotel) throw new NotFoundException('Hotel not found');
 
-    // Admin can delete anything, Owner can only delete their own
     if (user.role !== UserRole.ADMIN) {
       this.checkOwnership(hotel, user.id);
     }
@@ -210,7 +202,6 @@ export class HotelsService {
     return buildResponse(HttpStatus.OK, 'Hotel deactivated successfully', null);
   }
 
-  // ── TOGGLE STATUS (Admin Only) ──────────────────────────
   async toggleStatus(id: string) {
     const hotel = await this.hotelModel.findByPk(id);
     if (!hotel) throw new NotFoundException('Hotel not found');

@@ -42,7 +42,7 @@ export class Payment extends Model {
   declare status: PaymentStatus;
 
   @Column({ type: DataType.STRING, allowNull: true })
-  declare stripe_intent_id: string; // Stripe transaction ID
+  declare stripe_intent_id: string; 
 
   @BelongsTo(() => Booking)
   declare booking: Booking;

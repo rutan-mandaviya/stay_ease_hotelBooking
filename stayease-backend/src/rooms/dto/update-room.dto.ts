@@ -1,4 +1,4 @@
-import { ApiPropertyOptional, PartialType } from '@nestjs/swagger'; // Changed from mapped-types to swagger
+import { ApiPropertyOptional, PartialType } from '@nestjs/swagger'; 
 import { CreateRoomDto } from './create-room.dto';
 import { IsBoolean, IsOptional } from 'class-validator';
 

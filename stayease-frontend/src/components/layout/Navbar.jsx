@@ -27,7 +27,7 @@ const Navbar = () => {
     <nav className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20 items-center">
-          {/* Logo Section */}
+          {}
           <Link to="/" className="flex items-center gap-3 group">
             <div className="bg-primary p-2.5 rounded-2xl group-hover:rotate-12 transition-all duration-500 shadow-lg shadow-primary/20">
               <Hotel className="text-secondary" size={24} />
@@ -37,7 +37,7 @@ const Navbar = () => {
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
+          {}
           <div className="hidden md:flex items-center gap-8">
             {!isAuthenticated ? (
               <div className="flex items-center gap-6">
@@ -55,7 +55,7 @@ const Navbar = () => {
               </div>
             ) : (
               <div className="flex items-center gap-6">
-                {/* ✨ NORMAL USER (GUEST) LINKS */}
+                {}
                 {user?.role === "guest" && (
                   <Link
                     to="/my-bookings"
@@ -66,7 +66,7 @@ const Navbar = () => {
                   </Link>
                 )}
 
-                {/* 🏠 HOTEL OWNER LINKS */}
+                {}
                 {user?.role === "hotel_owner" && (
                   <div className="flex items-center gap-6">
                     <Link
@@ -92,7 +92,7 @@ const Navbar = () => {
                   </div>
                 )}
 
-                {/* Profile & Logout Section */}
+                {}
                 <div className="flex items-center gap-4 pl-6 border-l border-gray-100 ml-2">
                   <div className="text-right hidden sm:block">
                     <p className="text-xs font-black text-secondary uppercase tracking-tight leading-none mb-1">
