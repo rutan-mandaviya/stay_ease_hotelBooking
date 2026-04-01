@@ -83,7 +83,7 @@ export class RoomsController {
   @Delete('rooms/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.HOTEL_OWNER)
-  RemoveRoom(@Param('id') id: string, @Req() req: { user: JwtPayloadDto }) {
+  removeRoom(@Param('id') id: string, @Req() req: { user: JwtPayloadDto }) {
     return this.roomsService.remove(id, req.user.id);
   }
 }

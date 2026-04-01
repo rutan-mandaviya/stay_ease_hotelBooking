@@ -42,15 +42,21 @@ import { Payment } from './payments/payment.model';
         database: config.get('DB_NAME'),
         models: [User, Hotel, Room, RoomImage, Booking, Review, Payment],
         autoLoadModels: true,
-        synchronize: true, 
+        synchronize: false,
       }),
       inject: [ConfigService],
     }),
-    BullModule.forRoot({
-      connection: {
-        host: 'localhost',
-        port: 6379,
-      },
+    BullModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        defaultOptions: {
+          removeOnComplete: true,
+        },  
+        connection: {
+          host: configService.get<string>('REDIS_HOST') || 'localhost',
+          port: configService.get<number>('REDIS_PORT') || 6379,
+        },
+      }),
     }),
     ScheduleModule.forRoot(),
     AuthModule,

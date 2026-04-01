@@ -66,8 +66,8 @@ export class BookingsController {
   @ApiConfirmBooking()
   @Patch(':id/confirm')
   @Roles(UserRole.ADMIN, UserRole.HOTEL_OWNER)
-  confirm(@Param('id') id: string) {
-    return this.bookingsService.confirm(id);
+  confirm(@Param('id') id: string, @Req() req: { user: JwtPayloadDto }) {
+    return this.bookingsService.confirm(id, req.user.id, req.user.role);
   }
 
   @ApiDownloadInvoice()

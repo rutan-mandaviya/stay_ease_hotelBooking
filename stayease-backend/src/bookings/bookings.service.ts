@@ -14,6 +14,7 @@ import { Booking, BookingStatus } from './booking.model';
 import { Room } from '../rooms/models/room.model';
 import { Hotel } from '../hotels/hotel.model';
 import { CreateBookingDto } from './dto/create-booking.dto';
+import { Payment, PaymentStatus } from '../payments/payment.model';
 import { buildResponse } from 'src/common/helpers/response.helper';
 import { User, UserRole } from 'src/users/user.model';
 import { GetBookingsQueryDto } from './dto/get-bookings-query.dto';
@@ -28,6 +29,7 @@ export class BookingsService {
   constructor(
     @InjectModel(Booking) private bookingModel: typeof Booking,
     @InjectModel(Room) private roomModel: typeof Room,
+    @InjectModel(Payment) private paymentModel: typeof Payment,
     @InjectQueue('mail-queue') private mailQueue: Queue,
     private pdfService: PdfService,
     private sequelize: Sequelize,
@@ -62,11 +64,17 @@ export class BookingsService {
       if (overlap)
         throw new BadRequestException('Room is already booked for these dates');
 
-      const nights = Math.ceil(
-        (new Date(check_out_date).getTime() -
-          new Date(check_in_date).getTime()) /
-          (1000 * 3600 * 24),
+      const checkInUTC = Date.UTC(
+         new Date(check_in_date).getFullYear(),
+         new Date(check_in_date).getMonth(),
+         new Date(check_in_date).getDate()
       );
+      const checkOutUTC = Date.UTC(
+         new Date(check_out_date).getFullYear(),
+         new Date(check_out_date).getMonth(),
+         new Date(check_out_date).getDate()
+      );
+      const nights = Math.ceil((checkOutUTC - checkInUTC) / (1000 * 3600 * 24));
       const total_price = nights * room.price_per_night;
 
       const booking = await this.bookingModel.create(
@@ -191,20 +199,55 @@ export class BookingsService {
 
   
   
-  async confirm(id: string) {
-    const booking = await this.bookingModel.findByPk(id, { include: [User] });
+  async confirm(id: string, userId: string, role: string) {
+    const booking = await this.bookingModel.findByPk(id, {
+      include: [
+        User,
+        {
+          model: Room,
+          include: [{ model: Hotel }],
+        },
+      ],
+    });
     if (!booking) throw new NotFoundException('Booking not found');
 
-    
-    await booking.update({ status: BookingStatus.CONFIRMED, is_paid: true });
+    if (
+      role === UserRole.HOTEL_OWNER &&
+      booking.room?.hotel?.owner_id !== userId
+    ) {
+      throw new ForbiddenException('You do not own the hotel for this booking');
+    }
 
-    
-    await this.mailQueue.add('send-invoice', {
-      bookingId: booking.id,
-      email: booking.user.email,
-    });
+    const transaction = await this.sequelize.transaction();
+    try {
+      await booking.update(
+        { status: BookingStatus.CONFIRMED, is_paid: true },
+        { transaction },
+      );
 
-    return buildResponse(HttpStatus.OK, 'Booking confirmed manually', booking);
+      await this.paymentModel.create(
+        {
+          booking_id: booking.id,
+          amount: booking.total_price,
+          status: PaymentStatus.PAID,
+          currency: 'INR',
+        },
+        { transaction },
+      );
+
+      await transaction.commit();
+
+      await this.mailQueue.add('send-invoice', {
+        bookingId: booking.id,
+        email: booking.user.email,
+      });
+
+      return buildResponse(HttpStatus.OK, 'Booking confirmed manually and payment recorded', booking);
+    } catch (error) {
+      await transaction.rollback();
+      this.logger.error('Error confirming booking', error);
+      throw new InternalServerErrorException('Failed to confirm booking and process payment');
+    }
   }
 
   

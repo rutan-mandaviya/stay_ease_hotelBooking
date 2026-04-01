@@ -69,3 +69,14 @@ export function ApiDeleteRoom() {
     ApiResponse({ status: 404, description: 'Room not found.' }),
   );
 }
+
+export function ApiUploadRoomImages() {
+  return applyDecorators(
+    ApiBearerAuth('JWT-auth'),
+    ApiOperation({ summary: 'Upload multiple images for a room' }),
+    ApiParam({ name: 'id', description: 'Room UUID' }),
+    ApiResponse({ status: 201, description: 'Images uploaded successfully.' }),
+    ApiResponse({ status: 403, description: 'Forbidden. Access denied.' }),
+    ApiResponse({ status: 404, description: 'Room not found.' }),
+  );
+}

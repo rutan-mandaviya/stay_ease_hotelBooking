@@ -35,12 +35,7 @@ export class ReviewsService {
       throw new BadRequestException('Invalid booking or stay not completed.');
     }
 
-    
-    if (dto.comment && dto.comment.trim().length < 5) {
-      throw new BadRequestException(
-        'Comment must be at least 5 characters long.',
-      );
-    }
+    // Validation is now properly handled by class-validator in DTO
 
     
     const existing = await this.reviewModel.findOne({

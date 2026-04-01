@@ -9,7 +9,6 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Op, Sequelize } from 'sequelize';
 import { Hotel } from './hotel.model';
 import { User } from '../users/user.model';
-
 import { CreateHotelDto } from './dto/create-hotel.dto';
 import { UpdateHotelDto } from './dto/update-hotel.dto';
 import { HotelQueryDto } from './dto/hotel-query.dto';
@@ -17,6 +16,7 @@ import { UserRole } from '../users/user.model';
 import { buildResponse } from 'src/common/helpers/response.helper';
 import { Room } from 'src/rooms/models/room.model';
 import { RoomImage } from 'src/rooms/models/room-image.model';
+import { Review } from 'src/reviews/review.model';
 
 @Injectable()
 export class HotelsService {
@@ -50,8 +50,8 @@ export class HotelsService {
     if (search) where.name = { [Op.like]: `%${search}%` };
 
     if (minPrice || maxPrice) {
-      const min = minPrice || 0;
-      const max = maxPrice || 999999;
+      const min = Number(minPrice) || 0;
+      const max = Number(maxPrice) || 999999;
       where.id = {
         [Op.in]: Sequelize.literal(`(
         SELECT hotel_id FROM rooms 
@@ -65,44 +65,41 @@ export class HotelsService {
       where,
       limit: Number(limit),
       offset,
+      subQuery: false,
       attributes: {
         include: [
           [
-            Sequelize.literal(
-              `(SELECT COALESCE(AVG(rating), 0) FROM reviews WHERE reviews.hotel_id = Hotel.id)`,
-            ),
+            Sequelize.fn('COALESCE', Sequelize.fn('AVG', Sequelize.col('reviews.rating')), 0),
             'avg_rating',
           ],
-
           [
-            Sequelize.literal(
-              `(SELECT COUNT(*) FROM reviews WHERE reviews.hotel_id = Hotel.id)`,
-            ),
+            Sequelize.fn('COUNT', Sequelize.fn('DISTINCT', Sequelize.col('reviews.id'))),
             'total_reviews',
           ],
-
           [
-            Sequelize.literal(
-              `(SELECT MIN(price_per_night) FROM rooms WHERE rooms.hotel_id = Hotel.id AND rooms.is_active = true)`,
-            ),
+            Sequelize.fn('MIN', Sequelize.col('rooms.price_per_night')),
             'starting_price',
           ],
         ],
       },
       include: [
         { model: User, as: 'owner', attributes: ['id', 'name'] },
-        { model: Room, as: 'rooms', attributes: ['id'], include: [RoomImage] },
+        { model: Room, as: 'rooms', attributes: ['id', 'price_per_night'], include: [RoomImage] },
+        { model: Review, attributes: [] },
       ],
+      group: ['Hotel.id', 'owner.id', 'rooms.id', 'rooms->images.id'],
       order: [['created_at', 'DESC']],
       distinct: true,
     });
 
+    const totalCount = Array.isArray(count) ? count.length : count;
+
     return buildResponse(HttpStatus.OK, 'Hotels fetched successfully', {
       hotels: rows,
       meta: {
-        total: count,
+        total: totalCount,
         page: Number(page),
-        totalPages: Math.ceil(count / Number(limit)),
+        totalPages: Math.ceil(totalCount / Number(limit)),
       },
     });
   }
@@ -110,23 +107,24 @@ export class HotelsService {
   async findOwnerHotels(ownerId: string) {
     const hotels = await this.hotelModel.findAll({
       where: { owner_id: ownerId },
+      subQuery: false,
       attributes: {
         include: [
           [
-            Sequelize.literal(
-              `(SELECT COALESCE(AVG(rating), 0) FROM reviews WHERE reviews.hotel_id = Hotel.id)`,
-            ),
+            Sequelize.fn('COALESCE', Sequelize.fn('AVG', Sequelize.col('reviews.rating')), 0),
             'avg_rating',
           ],
           [
-            Sequelize.literal(
-              `(SELECT COUNT(*) FROM reviews WHERE reviews.hotel_id = Hotel.id)`,
-            ),
+            Sequelize.fn('COUNT', Sequelize.fn('DISTINCT', Sequelize.col('reviews.id'))),
             'total_reviews',
           ],
         ],
       },
-      include: [{ model: Room, as: 'rooms', attributes: ['id'] }],
+      include: [
+        { model: Room, as: 'rooms', attributes: ['id'] },
+        { model: Review, attributes: [] },
+      ],
+      group: ['Hotel.id', 'rooms.id'],
       order: [['created_at', 'DESC']],
     });
 
@@ -135,6 +133,7 @@ export class HotelsService {
   async findOne(id: string) {
     try {
       const hotel = await this.hotelModel.findByPk(id, {
+        subQuery: false,
         include: [
           {
             model: User,
@@ -148,27 +147,21 @@ export class HotelsService {
               { model: RoomImage, as: 'images', attributes: ['image_url'] },
             ],
           },
+          { model: Review, attributes: [] },
         ],
         attributes: {
           include: [
             [
-              Sequelize.literal(`(
-              SELECT COALESCE(AVG(rating), 0) 
-              FROM reviews 
-              WHERE reviews.hotel_id = "${id}"
-            )`),
+              Sequelize.fn('COALESCE', Sequelize.fn('AVG', Sequelize.col('reviews.rating')), 0),
               'avg_rating',
             ],
             [
-              Sequelize.literal(`(
-              SELECT COUNT(*) 
-              FROM reviews 
-              WHERE reviews.hotel_id = "${id}"
-            )`),
+              Sequelize.fn('COUNT', Sequelize.fn('DISTINCT', Sequelize.col('reviews.id'))),
               'total_reviews',
             ],
           ],
         },
+        group: ['Hotel.id', 'owner.id', 'rooms.id', 'rooms->images.id'],
       });
 
       if (!hotel) throw new NotFoundException('Hotel not found');

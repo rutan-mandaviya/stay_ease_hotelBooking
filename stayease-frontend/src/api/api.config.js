@@ -21,14 +21,12 @@ API.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    
     if (originalRequest.url.includes("/auth/refresh")) {
       localStorage.clear();
       window.location.href = "/login";
       return Promise.reject(error);
     }
 
-    
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
@@ -52,7 +50,6 @@ API.interceptors.response.use(
           `Bearer ${data.access_token}`;
         return API(originalRequest);
       } catch (refreshError) {
-        
         localStorage.clear();
         window.location.href = "/login";
         return Promise.reject(refreshError);

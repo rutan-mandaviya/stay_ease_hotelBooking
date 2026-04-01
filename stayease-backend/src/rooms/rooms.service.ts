@@ -115,7 +115,7 @@ export class RoomsService {
 
     if (!image) throw new NotFoundException('Image record not found');
 
-    const filePath = path.join(process.cwd(), image.image_url);
+    const filePath = path.join(process.cwd(), 'uploads', 'rooms', path.basename(image.image_url));
 
     try {
       if (fs.existsSync(filePath)) {
@@ -129,24 +129,16 @@ export class RoomsService {
       console.error('Physical deletion error:', message);
     }
 
-    if (image.room && image.room.hotel) {
-      if (image.room.hotel.owner_id !== userId) {
-        throw new ForbiddenException('You do not own this property');
-      }
-    } else {
-      
-      console.log('Cleaning up orphaned record with no linked room/hotel');
+    if (!image.room || !image.room.hotel) {
+      throw new ForbiddenException('Cannot delete an orphaned image record');
     }
 
-    
+    if (image.room.hotel.owner_id !== userId) {
+      throw new ForbiddenException('You do not own this property');
+    }
     await image.destroy();
 
-    const finalMessage =
-      !image.room || !image.room.hotel
-        ? 'Orphaned image and file removed'
-        : 'Image and file removed successfully';
-
-    return buildResponse(HttpStatus.OK, finalMessage, null);
+    return buildResponse(HttpStatus.OK, 'Image and file removed successfully', null);
   }
 
   
